@@ -53,6 +53,9 @@ class PlugBuild implements Plugin<Project> {
                 //needed by javabdd
                 maven { url "https://breda.informatik.uni-mannheim.de/nexus/content/repositories/public" }
 
+                // Repositories aren't transitives from a project to another
+                // See gradle issue https://github.com/gradle/gradle/issues/1352
+                // TODO need a better way to store those jars
                 flatDir {
                     dirs rootProject.file('../external-libs/obp/OBP-1.5.1_batch/jars')
                 }
