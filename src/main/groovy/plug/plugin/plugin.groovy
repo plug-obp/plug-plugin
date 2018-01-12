@@ -24,6 +24,7 @@ class PlugBuild implements Plugin<Project> {
 
         project.allprojects {
             apply plugin: 'java'
+            apply plugin: 'java-library-distribution'
             apply plugin: 'maven-publish'
 
             sourceSets {
@@ -49,7 +50,6 @@ class PlugBuild implements Plugin<Project> {
                 maven { url "http://mocs-artefacts.ensta-bretagne.fr/plug-repo/"}
 
                 maven { url = 'http://repository.ops4j.org/maven2/' }
-
                 //needed by javabdd
                 maven { url "https://breda.informatik.uni-mannheim.de/nexus/content/repositories/public" }
 
@@ -70,7 +70,6 @@ class PlugBuild implements Plugin<Project> {
                     }
                 }
             }
-
         }
 
         project.allprojects {
