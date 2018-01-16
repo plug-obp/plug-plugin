@@ -44,7 +44,10 @@ class PlugBuild implements Plugin<Project> {
                 options.encoding = 'UTF-8'
             }
 
-            // Declares repositories to refer to
+            // Declares repositories to refer to for all projects
+
+            // Repositories aren't transitives from a project to another
+            // See gradle issue https://github.com/gradle/gradle/issues/1352
             repositories {
                 mavenCentral()
                 maven { url "http://mocs-artefacts.ensta-bretagne.fr/plug-repo/"}
@@ -53,10 +56,12 @@ class PlugBuild implements Plugin<Project> {
                 //needed by javabdd
                 maven { url "https://breda.informatik.uni-mannheim.de/nexus/content/repositories/public" }
 
-                // Repositories aren't transitives from a project to another
-                // See gradle issue https://github.com/gradle/gradle/issues/1352
-                // TODO need a better way to store those jars
-                flatDir { dirs rootProject.file('../external-libs/obp/OBP-1.5.1_batch/jars') }
+                ivy {
+                    url = 'http://mocs-artefacts.ensta-bretagne.fr/OBP/1.5.1/jars'
+                    layout 'pattern', {
+                        artifact '[artifact]-[revision].jar'
+                    }
+                }
 
                 // UML jars
                 ivy {
