@@ -56,9 +56,37 @@ class PlugBuild implements Plugin<Project> {
                 // Repositories aren't transitives from a project to another
                 // See gradle issue https://github.com/gradle/gradle/issues/1352
                 // TODO need a better way to store those jars
-                flatDir {
-                    dirs rootProject.file('../external-libs/obp/OBP-1.5.1_batch/jars')
+                flatDir { dirs rootProject.file('../external-libs/obp/OBP-1.5.1_batch/jars') }
+
+                // UML jars
+                ivy {
+                    url = 'https://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/modeling/mdt/uml2/updates/5.0/R201502020947/plugins/'
+                    layout 'pattern', {
+                        artifact '[artifact](_[revision])(.[ext])'
+                    }
                 }
+
+                //need this for petitparser in tuml-interpreter (gradle bug: https://issues.gradle.org/browse/GRADLE-1940)
+                maven { url = 'https://jitpack.io' }
+
+                //need this for SpinJa
+                ivy {
+                    url = 'https://github.com/teodorov/spinja/raw/master'
+                    layout 'pattern', {
+                        artifact '[artifact].jar'
+                    }
+                }
+
+                //need this for TLA
+                ivy {
+                    url = 'https://tla.msr-inria.inria.fr/tlatoolbox/staged/dist/'
+                    layout 'pattern', {
+                        artifact '[artifact].jar'
+                    }
+                }
+
+                // For lclockrdl
+                maven { url "https://breda.informatik.uni-mannheim.de/nexus/content/repositories/public" }
             }
 
             // Alls tests depends on junit 4
