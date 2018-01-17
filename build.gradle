@@ -19,6 +19,9 @@ dependencies {
 
 
 publishing {
+    repositories {
+        maven { url "/Volumes/data/webperso/mocs-artefacts/plug-repo" }
+    }
     publications {
         mavenJava(MavenPublication) {
             from components.java

@@ -7,9 +7,9 @@ import org.gradle.api.tasks.compile.JavaCompile
 /**
  */
 class PlugExtension {
-    String version = "0.2"
+    String version = "0.0.3"
+    String repository = "/Volumes/data/webperso/mocs-artefacts/plug-repo"
 }
-
 
 /**
  * Gradle build plugin for Plug projects
@@ -24,7 +24,6 @@ class PlugBuild implements Plugin<Project> {
 
         project.allprojects {
             apply plugin: 'java'
-            apply plugin: 'java-library-distribution'
             apply plugin: 'maven-publish'
 
             sourceSets {
@@ -37,6 +36,9 @@ class PlugBuild implements Plugin<Project> {
                     resources { srcDir 'tests/resources'}
                 }
             }
+
+            group='fr.ensta-bretagne'
+            version = project.plug.version
 
             // Sets Java compile option to use UTF-8 encoding
             compileJava.options.encoding = 'UTF-8'
@@ -52,16 +54,17 @@ class PlugBuild implements Plugin<Project> {
                 mavenCentral()
                 maven { url "http://mocs-artefacts.ensta-bretagne.fr/plug-repo/"}
 
-                maven { url = 'http://repository.ops4j.org/maven2/' }
-                //needed by javabdd
-                maven { url "https://breda.informatik.uni-mannheim.de/nexus/content/repositories/public" }
-
                 ivy {
                     url = 'http://mocs-artefacts.ensta-bretagne.fr/OBP/1.5.1/jars'
                     layout 'pattern', {
                         artifact '[artifact]-[revision].jar'
                     }
                 }
+
+                maven { url = 'http://repository.ops4j.org/maven2/' }
+
+                //needed by javabdd
+                maven { url "https://breda.informatik.uni-mannheim.de/nexus/content/repositories/public" }
 
                 // UML jars
                 ivy {
@@ -99,18 +102,17 @@ class PlugBuild implements Plugin<Project> {
                 testCompile group: 'junit', name: 'junit', version: '4.+'
             }
 
+            // Publication configuration
             publishing {
+                repositories {
+                    maven { url project.plug.repository }
+                }
                 publications {
                     mavenJava(MavenPublication) {
                         from components.java
                     }
                 }
             }
-        }
-
-        project.allprojects {
-            group='fr.ensta-bretagne'
-            version = project.plug.version
         }
 
     }
