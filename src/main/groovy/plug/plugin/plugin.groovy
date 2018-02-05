@@ -7,7 +7,7 @@ import org.gradle.api.tasks.compile.JavaCompile
 /**
  */
 class PlugExtension {
-    String version = "0.0.3"
+    String version = "0.0.4"
     String repository = "/Volumes/data/webperso/mocs-artefacts/plug-repo"
 }
 
