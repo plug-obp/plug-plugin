@@ -1,3 +1,6 @@
+plugins {
+    id "com.jfrog.bintray" version "1.8.0"
+}
 
 group 'fr.ensta-bretagne'
 version '0.2'
@@ -17,14 +20,33 @@ dependencies {
     compile localGroovy()
 }
 
-
 publishing {
-    repositories {
-        maven { url "/Volumes/data/webperso/mocs-artefacts/plug-repo" }
-    }
     publications {
         mavenJava(MavenPublication) {
             from components.java
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+
+    publications = ['mavenJava']
+
+    pkg {
+        name = 'fr.ensta-bretagne'
+        repo = 'maven'
+        userOrg = 'plug-obp'
+        desc = 'Plug artifacts'
+        vcsUrl = 'https://github.com/plug-obp'
+        websiteUrl = 'http://plug-obp.github.io'
+        licenses = ['MIT']
+        publicDownloadNumbers = true
+
+        //Optional version descriptor
+        version {
+            name = project.version //Bintray logical version name
         }
     }
 }
