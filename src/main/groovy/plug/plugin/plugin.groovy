@@ -3,7 +3,8 @@ package plug.plugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.tasks.bundling.Jar
+
 /**
  */
 class PlugExtension {
@@ -42,9 +43,6 @@ class PlugBuild implements Plugin<Project> {
 
             // Sets Java compile option to use UTF-8 encoding
             compileJava.options.encoding = 'UTF-8'
-            tasks.withType(JavaCompile) {
-                options.encoding = 'UTF-8'
-            }
 
             // Declares repositories to refer to for all projects
 
@@ -63,6 +61,7 @@ class PlugBuild implements Plugin<Project> {
 
                 maven { url = 'http://repository.ops4j.org/maven2/' }
 
+                /*
                 //needed by javabdd
                 maven { url "https://breda.informatik.uni-mannheim.de/nexus/content/repositories/public" }
 
@@ -93,9 +92,13 @@ class PlugBuild implements Plugin<Project> {
                     }
                 }
 
-                // For lclockrdl
-                maven { url "https://breda.informatik.uni-mannheim.de/nexus/content/repositories/public" }
+                */
             }
+
+            Jar scJar = task('sourceJar', type: Jar) {
+                from sourceSets.main.allSource
+            }
+
 
             // Alls tests depends on junit 4
             dependencies {
@@ -110,6 +113,7 @@ class PlugBuild implements Plugin<Project> {
                 publications {
                     mavenJava(MavenPublication) {
                         from components.java
+                        artifact(scJar) { classifier = 'sources' }
                     }
                 }
             }
