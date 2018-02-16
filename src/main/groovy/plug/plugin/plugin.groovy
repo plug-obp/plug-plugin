@@ -3,8 +3,6 @@ package plug.plugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.tasks.bundling.Jar
-
 /**
  */
 class PlugExtension {
@@ -50,55 +48,22 @@ class PlugBuild implements Plugin<Project> {
             // See gradle issue https://github.com/gradle/gradle/issues/1352
             repositories {
                 mavenCentral()
-                maven { url "http://mocs-artefacts.ensta-bretagne.fr/plug-repo/"}
 
-                ivy {
-                    url = 'http://mocs-artefacts.ensta-bretagne.fr/OBP/1.5.1/jars'
-                    layout 'pattern', {
-                        artifact '[artifact]-[revision].jar'
-                    }
-                }
+                maven { url "https://dl.bintray.com/plug-obp/maven" }
 
-                maven { url = 'http://repository.ops4j.org/maven2/' }
-
-                /*
-                //needed by javabdd
-                maven { url "https://breda.informatik.uni-mannheim.de/nexus/content/repositories/public" }
-
-                // UML jars
-                ivy {
-                    url = 'https://www.mirrorservice.org/sites/download.eclipse.org/eclipseMirror/modeling/mdt/uml2/updates/5.0/R201502020947/plugins/'
-                    layout 'pattern', {
-                        artifact '[artifact](_[revision])(.[ext])'
-                    }
-                }
+                // eclipse jars
+                maven { url "https://repo.eclipse.org/content/groups/releases"}
 
                 //need this for petitparser in tuml-interpreter (gradle bug: https://issues.gradle.org/browse/GRADLE-1940)
                 maven { url = 'https://jitpack.io' }
-
-                //need this for SpinJa
-                ivy {
-                    url = 'https://github.com/teodorov/spinja/raw/master'
-                    layout 'pattern', {
-                        artifact '[artifact].jar'
-                    }
-                }
-
-                //need this for TLA
-                ivy {
-                    url = 'https://tla.msr-inria.inria.fr/tlatoolbox/staged/dist/'
-                    layout 'pattern', {
-                        artifact '[artifact].jar'
-                    }
-                }
-
-                */
             }
 
+            /*
+            // No sources yet
             Jar scJar = task('sourceJar', type: Jar) {
                 from sourceSets.main.allSource
             }
-
+            */
 
             // Alls tests depends on junit 4
             dependencies {
@@ -113,7 +78,7 @@ class PlugBuild implements Plugin<Project> {
                 publications {
                     mavenJava(MavenPublication) {
                         from components.java
-                        artifact(scJar) { classifier = 'sources' }
+                        //artifact(scJar) { classifier = 'sources' }
                     }
                 }
             }
