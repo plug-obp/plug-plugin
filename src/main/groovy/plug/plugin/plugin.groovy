@@ -7,7 +7,8 @@ import org.gradle.api.publish.maven.MavenPublication
  */
 class PlugExtension {
     String version = "0.0.4"
-    String repository = "/Volumes/data/webperso/mocs-artefacts/plug-repo"
+
+    String bintrayOrg = 'plug-obp'
 }
 
 /**
@@ -24,6 +25,7 @@ class PlugBuild implements Plugin<Project> {
         project.allprojects {
             apply plugin: 'java'
             apply plugin: 'maven-publish'
+            apply plugin: "com.jfrog.bintray"
 
             sourceSets {
                 main {
@@ -52,7 +54,7 @@ class PlugBuild implements Plugin<Project> {
                 maven { url "https://dl.bintray.com/plug-obp/maven" }
 
                 // eclipse jars
-                maven { url "https://repo.eclipse.org/content/groups/releases"}
+                maven { url "https://repo.eclipse.org/content/groups/releases" }
 
                 //need this for petitparser in tuml-interpreter (gradle bug: https://issues.gradle.org/browse/GRADLE-1940)
                 maven { url = 'https://jitpack.io' }
@@ -72,9 +74,6 @@ class PlugBuild implements Plugin<Project> {
 
             // Publication configuration
             publishing {
-                repositories {
-                    maven { url project.plug.repository }
-                }
                 publications {
                     mavenJava(MavenPublication) {
                         from components.java
@@ -82,6 +81,32 @@ class PlugBuild implements Plugin<Project> {
                     }
                 }
             }
+
+            bintray {
+                user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+                key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+
+                publications = ['mavenJava']
+
+                pkg {
+                    name = project.group
+                    repo = 'maven'
+                    userOrg = project.plug.bintrayOrg
+                    desc = 'Plug artifacts'
+                    vcsUrl = 'https://github.com/plug-obp'
+                    websiteUrl = 'http://plug-obp.github.io'
+                    licenses = ['MIT']
+                    publicDownloadNumbers = true
+                    override = true
+                    publish = true
+
+                    //Optional version descriptor
+                    version {
+                        name = project.version //Bintray logical version name
+                    }
+                }
+            }
+
         }
 
     }
