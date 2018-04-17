@@ -6,7 +6,7 @@ import org.gradle.api.publish.maven.MavenPublication
 /**
  */
 class PlugExtension {
-    String version = "0.0.4"
+    String version = "0.0.5"
 
     String bintrayOrg = 'plug-obp'
 }
