@@ -64,7 +64,7 @@ bintray {
         websiteUrl = 'http://plug-obp.github.io'
         licenses = ['MIT']
         publicDownloadNumbers = true
-        override = daily
+        override = true//daily
         publish = true
 
         //Optional version descriptor

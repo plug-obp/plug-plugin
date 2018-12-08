@@ -3,6 +3,8 @@ package plug.plugin
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.GradleBuild
+
 /**
  */
 class PlugExtension {
@@ -23,11 +25,9 @@ class PlugBuild implements Plugin<Project> {
         project.extensions.create("plug", PlugExtension)
 
         project.allprojects {
-            plugins {
-                id 'java'
-                id 'maven-publish'
-                id 'com.jfrog.bintray' version '1.8.4'
-            }
+            apply plugin: 'java'
+            apply plugin: 'maven-publish'
+            apply plugin: "com.jfrog.bintray"
 
             sourceSets {
                 main {
@@ -48,6 +48,11 @@ class PlugBuild implements Plugin<Project> {
 
             // Declares repositories to refer to for all projects
 
+            def localRepository=System.getenv('PLUG_REPOSITORY')
+            if (localRepository == null) {
+                localRepository = "$project.buildDir/repository"
+            }
+
             // Repositories aren't transitives from a project to another
             // See gradle issue https://github.com/gradle/gradle/issues/1352
             repositories {
@@ -60,6 +65,8 @@ class PlugBuild implements Plugin<Project> {
 
                 //need this for petitparser in tuml-interpreter (gradle bug: https://issues.gradle.org/browse/GRADLE-1940)
                 maven { url = 'https://jitpack.io' }
+
+                maven { url = localRepository }
             }
 
             /*
@@ -73,11 +80,7 @@ class PlugBuild implements Plugin<Project> {
             dependencies {
                 testCompile group: 'junit', name: 'junit', version: '4.7'
             }
-            def localRepository=System.getenv('PLUG_REPOSITORY')
-            if (localRepository == null) {
-                localRepository = "$project.buildDir/repository"
-            }
-            println "Local repository configured to: $localRepository"
+            //println "Local repository configured to: $localRepository"
             // Publication configuration
             publishing {
                 publications {
@@ -118,6 +121,30 @@ class PlugBuild implements Plugin<Project> {
                 }
             }
 
+        }
+
+        project.task('cleanAll', type: GradleBuild) {
+            tasks = [ 'clean' ]
+        }
+
+        project.task('buildAll', type: GradleBuild) {
+            tasks = [ 'build' ]
+        }
+
+        project.task('bintrayUploadAll', type: GradleBuild) {
+            tasks = [ 'bintrayUpload' ]
+        }
+
+        project.task('publishAll', type: GradleBuild) {
+            tasks = [ 'publish' ]
+        }
+
+        project.task('assembleAll', type: GradleBuild) {
+            tasks = [ 'assemble' ]
+        }
+
+        project.task('testAll', type: GradleBuild) {
+            tasks = [ 'test' ]
         }
 
     }
