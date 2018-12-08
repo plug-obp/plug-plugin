@@ -1,9 +1,9 @@
 plugins {
-    id "com.jfrog.bintray" version "1.8.0"
+    id "com.jfrog.bintray" version "1.8.4"
 }
 
 group 'fr.ensta-bretagne'
-version '0.5'
+version '0.6'
 
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
@@ -26,15 +26,25 @@ repositories {
 dependencies {
     compile gradleApi()
     compile localGroovy()
-    // compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.12'
-    compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0"
+    compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
 
 }
+
+def localRepository=System.getenv('PLUG_REPOSITORY')
+if (localRepository == null) {
+    localRepository = "$project.buildDir/repository"
+}
+println "Local repository configured to: $localRepository"
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+        }
+    }
+    repositories {
+        maven {
+            url = localRepository
         }
     }
 }

@@ -6,7 +6,7 @@ import org.gradle.api.publish.maven.MavenPublication
 /**
  */
 class PlugExtension {
-    String version = "0.0.5"
+    String version = "0.0.6"
 
     String bintrayOrg = 'plug-obp'
 }
@@ -23,9 +23,11 @@ class PlugBuild implements Plugin<Project> {
         project.extensions.create("plug", PlugExtension)
 
         project.allprojects {
-            apply plugin: 'java'
-            apply plugin: 'maven-publish'
-            apply plugin: "com.jfrog.bintray"
+            plugins {
+                id 'java'
+                id 'maven-publish'
+                id 'com.jfrog.bintray' version '1.8.4'
+            }
 
             sourceSets {
                 main {
@@ -69,15 +71,24 @@ class PlugBuild implements Plugin<Project> {
 
             // Alls tests depends on junit 4
             dependencies {
-                testCompile group: 'junit', name: 'junit', version: '4.+'
+                testCompile group: 'junit', name: 'junit', version: '4.7'
             }
-
+            def localRepository=System.getenv('PLUG_REPOSITORY')
+            if (localRepository == null) {
+                localRepository = "$project.buildDir/repository"
+            }
+            println "Local repository configured to: $localRepository"
             // Publication configuration
             publishing {
                 publications {
                     mavenJava(MavenPublication) {
                         from components.java
                         //artifact(scJar) { classifier = 'sources' }
+                    }
+                }
+                repositories {
+                    maven {
+                        url = localRepository
                     }
                 }
             }
