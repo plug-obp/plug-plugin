@@ -8,7 +8,7 @@ import org.gradle.api.tasks.GradleBuild
 /**
  */
 class PlugExtension {
-    String version = "0.0.7"
+    String version = "0.0.8"
 
     String bintrayOrg = 'plug-obp'
 }

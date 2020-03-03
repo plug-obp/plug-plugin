@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'fr.ensta-bretagne'
-version '0.6'
+version '0.7'
 
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
