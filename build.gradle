@@ -21,7 +21,7 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/plug-obp/plug-plugin")
             credentials {
-                username = System.getenv("GITHUB_USERNAME") ?: "your-github-username"
+                username = System.getenv("GITHUB_ACTOR") ?: "your-github-username"
                 password = System.getenv("GITHUB_TOKEN") ?: "your-personal-access-token"
             }
         }
