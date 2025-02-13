@@ -1,34 +1,33 @@
 plugins {
+    id 'java-gradle-plugin'
     id 'groovy'
     id 'maven-publish'
 }
 group = 'fr.ensta-bretagne'
 version = '1.0'
 
-repositories {
-    mavenCentral()
-    maven {
-        url="${OBP2ReadOnlyMavenRepository}"
-        allowInsecureProtocol = true
+gradlePlugin {
+    plugins {
+        simplePlugin {
+            id = 'fr.ensta-bretagne.obp2-plugin'
+            implementationClass = 'obp2.plugin.OBP2GradleBuild'
+        }
     }
-}
-
-dependencies {
-    implementation gradleApi()
-    implementation localGroovy()
 }
 
 publishing {
     repositories {
         maven {
-            url = "${OBP2PublishMavenRepository}"
-        }
-        maven {
-            url = "${OBP2LocalMavenRepository}"
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/plug-obp/plug-plugin")
+            credentials {
+                username = System.getenv("GITHUB_USERNAME") ?: "your-github-username"
+                password = System.getenv("GITHUB_TOKEN") ?: "your-personal-access-token"
+            }
         }
     }
     publications {
-        maven(MavenPublication) {
+        mavenJava(MavenPublication) {
             from components.java
         }
     }
