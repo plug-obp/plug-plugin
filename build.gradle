@@ -1,75 +1,35 @@
 plugins {
-    id "com.jfrog.bintray" version "1.8.4"
+    id 'groovy'
+    id 'maven-publish'
 }
-
-group 'fr.ensta-bretagne'
-version '0.7'
-
-apply plugin: 'groovy'
-apply plugin: 'maven-publish'
-
-def daily = System.getenv('DAILY') != null
-if (daily) {
-    println "----- Daily build -----"
-    allprojects {
-        version = version + "-snapshot"
-    }
-}
+group = 'fr.ensta-bretagne'
+version = '1.0'
 
 repositories {
+    mavenCentral()
     maven {
-        url "https://plugins.gradle.org/m2/"
+        url="${OBP2ReadOnlyMavenRepository}"
+        allowInsecureProtocol = true
     }
-    jcenter()
 }
 
 dependencies {
-    compile gradleApi()
-    compile localGroovy()
-    compile "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4"
-
+    implementation gradleApi()
+    implementation localGroovy()
 }
-
-def localRepository=System.getenv('PLUG_REPOSITORY')
-if (localRepository == null) {
-    localRepository = "$project.buildDir/repository"
-}
-println "Local repository configured to: $localRepository"
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
     repositories {
         maven {
-            url = localRepository
+            url = "${OBP2PublishMavenRepository}"
+        }
+        maven {
+            url = "${OBP2LocalMavenRepository}"
         }
     }
-}
-
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-
-    publications = ['mavenJava']
-
-    pkg {
-        name = 'fr.ensta-bretagne'
-        repo = 'maven'
-        userOrg = 'plug-obp'
-        desc = 'Plug artifacts'
-        vcsUrl = 'https://github.com/plug-obp'
-        websiteUrl = 'http://plug-obp.github.io'
-        licenses = ['MIT']
-        publicDownloadNumbers = true
-        override = true//daily
-        publish = true
-
-        //Optional version descriptor
-        version {
-            name = project.version //Bintray logical version name
+    publications {
+        maven(MavenPublication) {
+            from components.java
         }
     }
 }
