@@ -19,7 +19,7 @@ class OBP2GradleBuild implements Plugin<Project> {
         project.extensions.create("obp2", OBPExtension)
 
         // Apply necessary plugins
-        project.pluginManager.apply("java")
+        project.pluginManager.apply("java-library")
         project.pluginManager.apply("maven-publish")
 
         // Set project metadata
