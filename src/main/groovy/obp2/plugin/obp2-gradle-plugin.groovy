@@ -45,23 +45,6 @@ class OBP2GradleBuild implements Plugin<Project> {
             }
         }
 
-        // // Configure Java plugin
-        // project.extensions.configure(JavaPluginExtension) { java ->
-        //     java.toolchain.languageVersion.set(obp2.javaVersion)
-        //     java.withSourcesJar()
-        //     java.withJavadocJar()
-        // }
-
-        // // Configure Java compilation options
-        // project.tasks.withType(JavaCompile).configureEach { task ->
-        //     task.options.encoding = "UTF-8"
-        //     task.javaCompiler.set(
-        //         project.extensions.getByType(JavaToolchainService).compilerFor {
-        //             languageVersion.set(obp2.javaVersion)
-        //         }
-        //     )
-        // }
-
         // Configure repositories
         project.repositories {
             mavenCentral()
